@@ -1,7 +1,7 @@
-400  d
-1 Miguel Romerod
-2 Rosa Prietod
-3 Oscar Castrod
+400
+1 Miguel Romero
+2 Rosa Prieto
+3 Oscar Castro
 4 Raquel Vazquezd
 5 Laura Dominguezd
 6 Marina Ruizd
