@@ -74,7 +74,7 @@ void Vertex<T>::PrintEdges(){
 	std::cout<<std::endl;
 	typename std::multimap<Vertex<T>*, Edge* >::iterator it;
 	for(it = this->adjacents.begin(); it != this->adjacents.end(); it++) {
-		std::cout<<std::endl<<"( "<<(it->first)->data<<" , "<<(it->second)->weigth<<" ) ";
+		std::cout<<std::endl<<"Nombre:"<<(it->first)->data<<", Afinidad: "<<(it->second)->weigth;
 	}
 	std::cout<<std::endl;
 }
