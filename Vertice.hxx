@@ -10,7 +10,7 @@ Vertex<T>::Vertex(){
 }
 //=========================================================================
 template < class T >
-Vertex<T>::Vertex(T& data) : data(data), visited(false), value(9999){
+Vertex<T>::Vertex(T& data) : data(data), visited(false), value(0){
 
 }
 //=========================================================================
@@ -71,12 +71,10 @@ T Vertex<T>::GetData() const {
 //=========================================================================
 template < class T >
 void Vertex<T>::PrintEdges(){
-	std::cout<<std::endl;
 	typename std::multimap<Vertex<T>*, Edge* >::iterator it;
 	for(it = this->adjacents.begin(); it != this->adjacents.end(); it++) {
-		std::cout<<std::endl<<"Nombre:"<<(it->first)->data<<", Afinidad: "<<(it->second)->weigth;
+		std::cout<<"Nombre:"<<(it->first)->data<<", Afinidad: "<<(it->second)->weigth<<std::endl;
 	}
-	std::cout<<std::endl;
 }
 //=========================================================================
 template < class T >

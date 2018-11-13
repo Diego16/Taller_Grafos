@@ -44,6 +44,6 @@ bool operator >= (const Persona &p1, const Persona &p2)
 }
 ostream& operator << (ostream &o, const Persona* p1)
 {
-	return o << p1->nombre<<" "<<p1->codigo;
+	return o << p1->nombre;
 }
 #endif

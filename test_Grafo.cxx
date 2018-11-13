@@ -13,7 +13,7 @@ Persona* findPersona(int code, list<Persona*> &listAux);
 Persona* findPersonaN(string nombre, list<Persona*> &listAux);
 vector<string> tokenizer(string toTokenize, char token);
 int main(int argc, char const *argv[]) {
-	Graph<Persona*> tRed= new Graph<Persona*>(true);
+	Graph<Persona*> tRed= new Graph<Persona*>(false);
 	list<Persona*> listAux;
 	bool opt=true;
 	string cmdInput = " ", input = " ", input1 = " ";
@@ -24,6 +24,7 @@ int main(int argc, char const *argv[]) {
 		return 1;
 	}
 	loadFile(argv[1],tRed,listAux);
+	cout << "Comandos disponibles: " << endl << "   consultar <nombre apellido>" << endl << "   amigos <nombre apellido> <nombre apellido>" << endl << "   arbol" << endl << "   unir <nombre apellido> <nombre apellido>" << endl << "   help" << endl << "   exit" << endl;
 	while(opt)
 	{
 		cout << "$ ";
@@ -49,57 +50,88 @@ int main(int argc, char const *argv[]) {
 				cmdInput.append(" ");
 				cmdInput.append(cmdList[2]);
 				auxPersona=findPersonaN(cmdInput, listAux);
+
 				if(auxPersona->getCodigo()==0)
 				{
 					cout<<"Esta persona no esta en la red"<<endl;
 				}
 				else
 				{
-					cout << "Siguiendo :"<<tRed.findVertex(auxPersona)->GetAdjacents().size()<<" personas"<<endl;
-					multimap<Vertex<Personas*>*, Edge* >::iterator it;
-					for()
+					set<Vertex<Persona*>*, VertComparator<Persona*> > auxSet=tRed.GetConectedComponents(tRed.findVertex(auxPersona));
+					cout << "Siguiendo: "<<tRed.findVertex(auxPersona)->GetAdjacents().size()<<" personas"<<endl;
+					tRed.findVertex(auxPersona)->PrintEdges();
+					cout<< "Seguidores:"<<endl;
+					set<Vertex<Persona*>*, VertComparator<Persona*> >::iterator it;
+					for(it=auxSet.begin(); it!=auxSet.end(); it++)
 					{
-
+						if((*it)->HasAdjacent(tRed.findVertex(auxPersona)))
+						{
+							cout<<"Nombre: "<<(*it)->GetData()<<", Afinidad: "<<((*it)->GetAdjacents().find(tRed.findVertex(auxPersona))->second)->weigth<<endl;
+						}
 					}
 				}
 			}
 			else
 				cout << "** Parametros invalidos **" << endl;
 		}
-		else if(strcmp(cmdList[0],"report")==0)
+		else if(strcmp(cmdList[0],"amigos")==0)
 		{
-			if (cantCmd>=2)
+			if (cantCmd==5)
 			{
+				bool amigo=false, amigo2=false;
+				int afinidad=0;
+				Persona* auxPersona= new Persona();
 				cmdInput = cmdList[1];
-				if(cmdInput=="flights")
+				cmdInput.append(" ");
+				cmdInput.append(cmdList[2]);
+				auxPersona=findPersonaN(cmdInput, listAux);
+				Persona* auxPersona2= new Persona();
+				input = cmdList[3];
+				input.append(" ");
+				input.append(cmdList[4]);
+				auxPersona2=findPersonaN(input, listAux);
+				if(auxPersona->getCodigo()==0||auxPersona2->getCodigo()==0)
 				{
-					if(cantCmd==3)
-					{
-						input = cmdList[2];
-						input1 = "N";
-					}
-					else if(cantCmd==4)
-					{
-						input = cmdList[2];
-						input1 = cmdList[3];
-					}
-					else
-					{
-						input = "N";
-						input1 = "N";
-					}
-				}
-				else if(cmdInput=="inventory")
-				{
-				}
-				else if(cmdInput=="money")
-				{
+					cout<<"Esta persona no esta en la red"<<endl;
 				}
 				else
-					cout << "** Parametros invalidos **" << endl;
+				{
+					if(tRed.findVertex(auxPersona)->HasAdjacent(tRed.findVertex(auxPersona2))&&tRed.findVertex(auxPersona2)->HasAdjacent(tRed.findVertex(auxPersona)))
+					{
+						afinidad=(tRed.findVertex(auxPersona2)->GetAdjacents().find(tRed.findVertex(auxPersona))->second)->weigth+(tRed.findVertex(auxPersona)->GetAdjacents().find(tRed.findVertex(auxPersona2))->second)->weigth;
+						cout<<"Estas personas son amigas con un grado de afinidad "<<afinidad/2<<endl;
+					}
+					else
+						cout<<"Estas personas no son amigas"<<endl;
+				}
 			}
 			else
 				cout << "** Parametros invalidos **" << endl;
+		}
+		else if(strcmp(cmdList[0],"arbol")==0)
+		{
+			tRed.flatTravel();
+		}
+		else if(strcmp(cmdList[0],"unir")==0)
+		{
+			cmdInput = cmdList[1];
+			cmdInput.append(" ");
+			cmdInput.append(cmdList[2]);
+			input = cmdList[3];
+			input.append(" ");
+			input.append(cmdList[4]);
+			if(findPersonaN(cmdInput, listAux)->getCodigo()==0||findPersonaN(input, listAux)->getCodigo()==0)
+			{
+				cout<<"Esta persona no esta en la red"<<endl;
+			}
+			else
+			{
+				tRed.dijkstra(findPersonaN(cmdInput, listAux),findPersonaN(input, listAux));
+			}
+		}
+		else if(strcmp(cmdList[0],"help")==0)
+		{
+			cout << endl << "Comandos disponibles: " << endl << "   consultar <nombre apellido>" << endl << "   amigos <nombre apellido> <nombre apellido>" << endl << "   arbol" << endl << "   unir <nombre apellido> <nombre apellido>" << endl << "   help" << endl << "   exit" << endl;
 		}
 		else if(strcmp(cmdList[0],"exit")==0)
 		{

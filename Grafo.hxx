@@ -107,7 +107,7 @@ void Graph<T>::flatTravel(){
 	typename std::set<Vertex<T>*>::iterator it;
 	std::cout<<std::endl;
 	for(it = this->vertexs.begin(); it != this->vertexs.end(); it++) {
-		std::cout<<(*it)->data<<" ";
+		std::cout<<(*it)->data<<" -> ";
 	}
 	std::cout<<std::endl;
 }
@@ -368,7 +368,7 @@ void Graph<T>::dijkstra(T begin, T end){
 		std::multimap<Vertex<T>*, Edge* > aux=u->GetAdjacents();
 		typename std::multimap<Vertex<T>*, Edge* >::iterator it=aux.begin();
 		for(; it!=aux.end(); it++) {
-			if(u->getValue()+ (it->second)->weigth > it->first->getValue()) {
+			if(u->getValue()+ (it->second)->weigth < it->first->getValue()) {
 				print.insert(std::pair<Vertex<T>*,Vertex<T>*>(it->first,u));
 				it->first->setValue(u->getValue()+  (it->second)->weigth);
 				print.find(it->first)->second=u;
